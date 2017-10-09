@@ -3,46 +3,15 @@ import './App.css';
 import {Playlist} from '../Playlist/Playlist';
 import {SearchBar} from '../SearchBar/SearchBar';
 import {SearchResults} from '../SearchResults/SearchResults';
+import Spotify from '../../util/Spotify';
 
 export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchResults: [
-          {
-            name: '',
-            artist: '',
-            album: ''
-          },
-          {
-            name: '',
-            artist: '',
-            album: ''
-          },
-          {
-            name: '',
-            artist: '',
-            album: ''
-          }
-      ],
+      searchResults: [],
       playlistName: 'My Playlist',
-      playlistTracks: [
-        {
-          name: '',
-          artist: '',
-          album: ''
-        },
-        {
-          name: '',
-          artist: '',
-          album: ''
-        },
-        {
-          name: '',
-          artist: '',
-          album: ''
-        }
-      ]
+      playlistTracks: []
     };
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
@@ -67,18 +36,27 @@ export class App extends Component {
   }
 
   updatePlaylistName(name) {
-    this.state.playlistName = name;
+    this.setState({
+      playlistName: name
+    })
   }
 
   savePlaylist() {
-    let playlistTracks = this.state.playlistTracks;
-    let trackURIs = playlistTracks.map(function(track) {
-      return track.uri
-    });
+    const trackURIs = this.state.playlistTracks.map(track => track.uri);
+    Spotify.savePlaylist(this.state.playlistName, trackURIs).then(() => {
+      this.setState({
+        playlistName: 'New Playlist',
+        searchResults: []
+      })
+    })
   }
 
-  search(term) {
-    console.log(term)
+  search(searchTerm) {
+    Spotify.search(searchTerm).then(results => {
+      this.setState({
+        searchResults: results
+      })
+    })
   }
 
   render() {
@@ -106,3 +84,4 @@ export class App extends Component {
     );
   }
 }
+
