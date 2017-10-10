@@ -10,7 +10,7 @@ export class App extends Component {
     super(props);
     this.state = {
       searchResults: [],
-      playlistName: 'My Playlist',
+      playlistName: 'Dees Playlist',
       playlistTracks: []
     };
     this.addTrack = this.addTrack.bind(this);
@@ -22,10 +22,7 @@ export class App extends Component {
 
   addTrack(track) {
     let playlistTracks = this.state.playlistTracks;
-    if (playlistTracks.find(savedTrack => savedTrack.id === track.id)) {
-      return;
-    }
-    playlistTracks.push({track});
+    playlistTracks.push(track);
     this.setState({playlistTracks: playlistTracks});
   }
 
@@ -46,7 +43,7 @@ export class App extends Component {
     Spotify.savePlaylist(this.state.playlistName, trackURIs).then(() => {
       this.setState({
         playlistName: 'New Playlist',
-        searchResults: []
+        playlistTracks: []
       })
     })
   }
@@ -61,16 +58,6 @@ export class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-    return (
       <div>
         <h1>Ja<span className="highlight">mmm</span>ing</h1>
         <div className="App">
@@ -84,4 +71,3 @@ export class App extends Component {
     );
   }
 }
-
